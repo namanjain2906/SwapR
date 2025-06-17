@@ -13,9 +13,12 @@ import Dashboard from './pages/admin/Dashboard.jsx'
 import AddProducts from './pages/admin/AddProducts.jsx'
 import ChatBox from './pages/admin/ChatBox.jsx'
 import ListProducts from './pages/admin/ListProducts.jsx'
+import { useAppContext } from './context/AppContext.jsx';
+import { SignIn } from '@clerk/clerk-react';
 
 const App = () => {
     const isAdminRoute = useLocation().pathname.startsWith("/admin");
+    const {user}=useAppContext()
   return (
     <div className='relative overflow-hidden'>
       <Toaster></Toaster>
@@ -23,10 +26,14 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Home/>}></Route>
         <Route path='/products' element={<Products/>}></Route>
-        <Route path='/product-details' element={<ProductDetails/>}></Route>
+        <Route path="/products/product-details/:id" element={<ProductDetails />} />
         <Route path='/cart' element={<Cart/>}></Route>
         <Route path='/my-orders' element={<MyOrders/>}></Route>
-        <Route path='/admin/*' element={<Layout/>}>
+        <Route path='/admin/*' element={user ? <Layout/> : (
+          <div className='min-h-screen flex justify-center items-center'>
+            <SignIn fallbackRedirectUrl={'/admin'}/>
+          </div>
+        )}>
           <Route index element={<Dashboard/>}/>
           <Route path='add-products' element={<AddProducts/>}/>
           <Route path='chat-box' element={<ChatBox/>}/>

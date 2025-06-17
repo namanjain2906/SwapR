@@ -1,0 +1,15 @@
+import mongoose, { Schema } from "mongoose";
+
+const orderSchema = new mongoose.Schema(
+  {
+    productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
+    sellerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    buyerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    price: { type: Number, required: true },
+    inCart: { type: Boolean, default: true, required: true },
+  },
+  { timestamps: true }
+);
+
+const Order = mongoose.model("Order", orderSchema);
+export default Order;
