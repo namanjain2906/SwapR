@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  createOrder,
   getCart,
   getOrders,
   addToCart,
@@ -10,7 +9,6 @@ import {
 
 const orderRouter = express.Router();
 
-orderRouter.post("/", createOrder);
 
 orderRouter.get("/cart", getCart);
 

@@ -36,9 +36,11 @@ export const AppProvider = ({ children }) => {
   const fetchCart = async () => {
     try {
       const token = await getToken();
+      console.log(token)
       const { data } = await axios.get("/api/orders/cart", {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log(data)
       if (data.success) {
         setCart(data.cart);
       } else {

@@ -8,10 +8,10 @@ const userSchema = new mongoose.Schema({
     cartitemid: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
     ordersid: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
     productsid: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
-    area: {type: String, required: true},
-    city: {type: String, required: true},
-    city_code: {type: String, required: true},
-    state: {type: String, required: true},
+    area: {type: String},
+    city: {type: String},
+    city_code: {type: String},
+    state: {type: String},
 })
 
 const User = mongoose.model('User', userSchema)

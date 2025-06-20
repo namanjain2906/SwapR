@@ -2,28 +2,18 @@ import Order from "../models/Order.js";
 import User from "../models/User.js";
 import Product from "../models/Product.js";
 
-export const createOrder = async (req, res) => {
-  try {
-    const { userId } = req.auth();
-    const { productId, sellerId, price } = req.body;
-    await Order.create({
-      productId: productId,
-      sellerId: sellerId,
-      buyerId: userId,
-      price: price,
-    });
-    await User.findByIdAndUpdate(userId, { $push: { ordersid: newOrderId } });
-    res.json({ success: true, message: "Order Placed Successfully" });
-  } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: error.message });
-  }
-};
 export const getCart = async (req, res) => {
   try {
     const { userId } = req.auth();
+    console.log(userId)
     const userData = await User.findById(userId).populate("cartitemid");
-    res.json({ success: true, cart: userData.cartitemid });
+    console.log(userData);
+    const cartData = userData.cartitemid;
+    if (cartData) {
+      res.json({ success: true, cart: cartData });
+    } else {
+      res.json({ success: true, cart: [] });
+    }
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
