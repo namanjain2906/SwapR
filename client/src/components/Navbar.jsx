@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { MenuIcon, Package, SearchIcon, UserRound, XIcon } from "lucide-react";
+import { MapPin, MenuIcon, Package, SearchIcon, UserRound, XIcon } from "lucide-react";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 
 const Navbar = () => {
@@ -98,6 +98,11 @@ const Navbar = () => {
                 label="My Orders"
                 labelIcon={<Package width={15} />}
                 onClick={() => navigate("my-orders")}
+              />
+              <UserButton.Action
+                label="My Address"
+                labelIcon={<MapPin width={15} />}
+                onClick={() => navigate("/address")}
               />
             </UserButton.MenuItems>
           </UserButton>

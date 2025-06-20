@@ -1,12 +1,15 @@
 import React from "react";
 import CartCard from "../components/CartCard.jsx";
 import BlurCircle from "../components/BlurCircle.jsx"
+import { useAppContext } from "../context/AppContext.jsx";
 
 const Cart = () => {
+  const {cart} = useAppContext()
+  console.log(cart)
   return (
     <div className=" max-md:m-3 max-md:mt-20 md:m-30 max-md:p-5 md:px-10 flex flex-col justify-center items-center gap-5">
       <BlurCircle top="50px" left="80px"/>
-      <BlurCircle top="500px" right="80px"/>
+      <BlurCircle top="500px" right="80px"/> 
       <CartCard
         ProductId={1}
         Price={800}

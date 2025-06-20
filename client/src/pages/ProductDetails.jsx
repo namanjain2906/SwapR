@@ -8,12 +8,18 @@ import { useAppContext } from "../context/AppContext.jsx";
 const ProductDetails = () => {
 
   const {axios} = useAppContext()
+  const {getToken}=useAppContext()
   const {id}=useParams()
   const [product, setProduct] = useState(null);
+
+  
+
   const getProductDetails = async () => {
     try {
       const { data } = await axios.get(`/api/products/product-details/${id}`);
       if (data.success) {
+
+        
         setProduct(data.product);
       } else {
         toast.error(data.message);
@@ -26,6 +32,23 @@ const ProductDetails = () => {
   useEffect(()=>{
     getProductDetails()
   },[id])
+
+  const handleAddToCart = async ()=>{
+    const token = await getToken()
+    console.log(product._id)
+    try {
+      const response = await axios.post("/api/orders/cart/add", {productId: product._id},{headers: {Authorization: `Bearer ${token}`}})
+       if (response.data.success) {
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error adding product:", error);
+      alert("Error adding product.");
+    }
+  }
+
   return product ? (
 
       <div className=" max-md:m-2 max-md:mt-20 md:m-30 ">
@@ -44,7 +67,7 @@ const ProductDetails = () => {
               {product.description}
             </p>
             <button
-              onClick={() => toast("Added to Cart")}
+              onClick={handleAddToCart}
               className="bg-[#F84565] py-2 px-6 font-medium rounded-lg mt-5 cursor-pointer hover:bg-[#D63854]"
             >
               Add To Cart
@@ -57,7 +80,6 @@ const ProductDetails = () => {
             Seller Details
           </p>
           <div className="text-center p-5 backdrop-blur border border-[#D63854]/20 bg-[#D63854]/10  rounded-lg mt-5 max-md:w-[80%] md:w-[50%]">
-            {console.log(product.sellerId)} 
             <p>{product.sellerId.name}</p>
             <p>{product.location}</p>
             <button className="bg-[#F84565] py-2 px-4 font-medium rounded-lg mt-5 cursor-pointer hover:bg-[#D63854]">

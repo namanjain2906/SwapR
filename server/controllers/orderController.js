@@ -1,4 +1,6 @@
 import Order from "../models/Order.js";
+import User from "../models/User.js";
+import orderRouter from "../routes/orderRoutes.js";
 
 export const createOrder = async (req, res) => {
   try {
@@ -10,7 +12,8 @@ export const createOrder = async (req, res) => {
       buyerId: userId,
       price: price,
     });
-    res.json({ success: true, message: "Order created in cart" });
+    await User.findByIdAndUpdate(userId,{ $push: { ordersid: newOrderId } })
+    res.json({ success: true, message: "Order Placed Successfully" });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
@@ -19,6 +22,9 @@ export const createOrder = async (req, res) => {
 export const getCart = async (req, res) => {
   try {
     const { userId } = req.auth();
+    console.log("getcart");
+    
+    console.log(userId)
     const cartOrder = await Order.find({
       buyerId: userId,
       inCart: true,
@@ -35,6 +41,10 @@ export const getCart = async (req, res) => {
 export const getOrders = async (req, res) => {
   try {
     const { userId } = req.auth();
+    console.log("getOrders");
+    
+    console.log(userId);
+    
     const orders = await Order.find({
       buyerId: userId,
       inCart: false,
@@ -47,3 +57,19 @@ export const getOrders = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+
+export const addToCart = async(req,res)=>{
+  try {
+    console.log("addtocart");
+    const {userId} = req.auth();
+    const {productId} = req.body
+    console.log(userId);
+
+    
+    await User.findByIdAndUpdate(userId,{ $push: { cartitemid: productId } })
+    res.json({ success: true, message: "Added to Cart" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+}

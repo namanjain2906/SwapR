@@ -35,7 +35,7 @@ export const addProduct = async (req, res) => {
 };
 
 export const allProducts = async (req, res) => {
-  try {
+  try {    
     const products = await Product.find({});
     res.json({ success: true, products: products });
   } catch (error) {
@@ -46,8 +46,11 @@ export const allProducts = async (req, res) => {
 
 export const categoryProducts = async (req, res) => {
   try {
+    console.log('req recieved')
     const { category } = req.params;
+    console.log(category)
     const products = await Product.find({ category: category.toLowerCase() });
+    console.log(products)
     res.json({ success: true, products: products });
   } catch (error) {
     console.log(error);

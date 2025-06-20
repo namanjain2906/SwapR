@@ -5,7 +5,6 @@ import {
   categoryProducts,
   productDetails,
 } from "../controllers/productController.js";
-import { protectAdmin } from "../middleware/auth.js";
 
 const productRouter = express.Router();
 
@@ -13,8 +12,9 @@ productRouter.post("/add", addProduct);
 
 productRouter.get("/", allProducts);
 
+productRouter.get("/categories/:category", categoryProducts);
+
 productRouter.get("/product-details/:id", productDetails);
 
-productRouter.get("/category/:category", categoryProducts);
 
 export default productRouter;

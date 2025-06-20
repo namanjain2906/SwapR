@@ -3,7 +3,7 @@ import axios from "axios";
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 import { useAuth, useUser } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 export const AppContext = createContext();
@@ -15,11 +15,12 @@ export const AppProvider = ({ children }) => {
 
   const navigate = useNavigate()
   const { user } = useUser();
-  
   const { getToken } = useAuth();
 
+ 
+
   const fetchProducts = async () => {
-    try {
+    try {      
       const { data } = await axios.get("/api/products");
       if (data.success) {
         setProducts(data.products);

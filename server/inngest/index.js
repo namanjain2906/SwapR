@@ -1,5 +1,6 @@
 import { Inngest } from "inngest";
 import User from "../models/User.js"
+import Product from "../models/Product.js"
 export const inngest = new Inngest({ id: "2nd-hand-e-commerce" });
 
 // Inngest function to save user data to a database
@@ -23,9 +24,14 @@ const syncUserCreation = inngest.createFunction(
 const syncUserDeletion = inngest.createFunction(
   { id: "delete-user-from-clerk" },
   { event: "clerk/user.deleted" },
-  async ({ event }) => {
+  async ({ event, step }) => {
     const { id } = event.data;
-    await User.findByIdAndDelete(id);
+    await step.log("recieved id", id)
+    let res = await User.findByIdAndDelete(id);
+    await step.log(res)
+    let res2 = await Product.deleteMany({sellerId: id})
+    await step.log(res2)
+
   }
 );
 
