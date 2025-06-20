@@ -4,6 +4,7 @@ import { useAppContext } from "../context/AppContext";
 
 const Address = () => {
   const { axios } = useAppContext();
+  const { getToken } = useAppContext();
   const [area, setArea] = useState("");
   const [city, setCity] = useState("");
   const [cityCode, setCityCode] = useState("");
@@ -11,13 +12,16 @@ const Address = () => {
 
   const handleSaveAddress = async () => {
     try {
+      const token = await getToken();
       const addressData = {
         area: area,
         city: city,
         city_code: cityCode,
         state: state,
       };
-      const response = await axios.post("/api/admin/address", addressData);
+      const response = await axios.post("/api/admin/address", addressData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (response.data.success) {
         toast.success(response.data.message);
       } else {

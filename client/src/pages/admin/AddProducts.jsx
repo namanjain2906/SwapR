@@ -7,6 +7,7 @@ import Loading from "../../components/Loading";
 
 const AddProducts = () => {
   const { axios, user } = useAppContext();
+  const {getToken}=useAppContext()
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
@@ -57,8 +58,9 @@ const AddProducts = () => {
         category: category,
         condition: condition,
       };
-      const response = await axios.post("/api/products/add", productData);
-
+      const token = await getToken()
+      const response = await axios.post("/api/products/add", productData, {headers: {Authorization: `Bearer ${token}`}});
+      
       if (response.data.success) {
         setIsLoading(false);
         toast.success(response.data.message);

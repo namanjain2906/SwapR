@@ -1,6 +1,8 @@
 import Product from "../models/Product.js";
+import User from "../models/User.js";
 
 export const addProduct = async (req, res) => {
+  const {userId}=req.auth();
   try {
     const {
       title,
@@ -26,7 +28,8 @@ export const addProduct = async (req, res) => {
       inCart: inCart,
       ordered: ordered
     };
-    await Product.create(product);
+    const response = await Product.create(product);
+    await User.findByIdAndUpdate(userId,{ $push: { productsid: response._id } })
     res.json({ success: true, message: "Product added successfully" });
   } catch (error) {
     console.log(error);
@@ -46,11 +49,8 @@ export const allProducts = async (req, res) => {
 
 export const categoryProducts = async (req, res) => {
   try {
-    console.log('req recieved')
     const { category } = req.params;
-    console.log(category)
     const products = await Product.find({ category: category.toLowerCase() });
-    console.log(products)
     res.json({ success: true, products: products });
   } catch (error) {
     console.log(error);

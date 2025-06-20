@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     image: {type: String, required: true},
     cartitemid: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
     ordersid: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
+    productsid: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
     area: {type: String, required: true},
     city: {type: String, required: true},
     city_code: {type: String, required: true},

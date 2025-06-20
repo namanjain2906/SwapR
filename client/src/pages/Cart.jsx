@@ -1,30 +1,55 @@
 import React from "react";
 import CartCard from "../components/CartCard.jsx";
-import BlurCircle from "../components/BlurCircle.jsx"
+import BlurCircle from "../components/BlurCircle.jsx";
 import { useAppContext } from "../context/AppContext.jsx";
+import toast from "react-hot-toast";
 
 const Cart = () => {
-  const {cart} = useAppContext()
-  console.log(cart)
-  return (
+  const { cart } = useAppContext();
+  const { axios, getToken } = useAppContext();
+  const handleCheckout = async () => {
+    try {
+      console.log("checkout");
+      const token = await getToken();
+      const response = await axios.get(
+        "/api/orders/checkout",
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.data.success) {
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error removing product:", error);
+      alert("Error removing product.");
+    }
+  };
+  return cart.length == 0 ? (
+    <div className="h-screen flex justify-center items-center text-4xl">
+      There are no products in your cart
+    </div>
+  ) : (
     <div className=" max-md:m-3 max-md:mt-20 md:m-30 max-md:p-5 md:px-10 flex flex-col justify-center items-center gap-5">
-      <BlurCircle top="50px" left="80px"/>
-      <BlurCircle top="500px" right="80px"/> 
-      <CartCard
-        ProductId={1}
-        Price={800}
-        Image="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=2067&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        Title="Table lamp"
-        Description="Table lamp for study table with 3 light modes."
-      />
-      <CartCard
-        ProductId={2}
-        Price={2500}
-        Image="https://plus.unsplash.com/premium_photo-1678074057896-eee996d4a23e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        Title="Chair"
-        Description="A simple classy comfortable chair."
-      />
-      <button className="bg-[#F84565] py-2 px-6 font-medium rounded-lg mt-5 cursor-pointer hover:bg-[#D63854]">Checkout</button>
+      <BlurCircle top="50px" left="80px" />
+      <BlurCircle top="500px" right="80px" />
+      {cart.map((item) => (
+        <CartCard
+          ProductId={item._id}
+          Price={item.price}
+          Image={item.image_path}
+          Title={item.title}
+          Description={item.description}
+        />
+      ))}
+      <div className="flex gap-10">
+        <button
+          onClick={handleCheckout}
+          className="bg-[#F84565] py-2 px-6 font-medium rounded-lg mt-5 cursor-pointer hover:bg-[#D63854]"
+        >
+          Checkout
+        </button>
+      </div>
     </div>
   );
 };

@@ -3,24 +3,21 @@ import axios from "axios";
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 import { useAuth, useUser } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
-import { useLocation, useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
-  const [orders, setOrders] = useState([])
+  const [orders, setOrders] = useState([]);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { user } = useUser();
   const { getToken } = useAuth();
 
- 
-
   const fetchProducts = async () => {
-    try {      
+    try {
       const { data } = await axios.get("/api/products");
       if (data.success) {
         setProducts(data.products);
@@ -70,12 +67,16 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      fetchCart();
-      fetchOrders()
+      fetchOrders();
     }
-  }, [user]);
+  }, [user, orders]);
+  useEffect(() => {
+    if (user) {
+      fetchCart();
+    }
+  }, [user, cart]);
 
-  const value = { axios, user, products, cart, orders, getToken, navigate  };
+  const value = { axios, user, products, cart, orders, getToken, navigate };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
