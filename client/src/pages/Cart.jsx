@@ -3,28 +3,39 @@ import CartCard from "../components/CartCard.jsx";
 import BlurCircle from "../components/BlurCircle.jsx";
 import { useAppContext } from "../context/AppContext.jsx";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const { cart } = useAppContext();
+  const { cart, setCart, address } = useAppContext();
   const { axios, getToken } = useAppContext();
+  const navigate = useNavigate();
   const handleCheckout = async () => {
     try {
-      console.log("checkout");
+      if (
+        !address.area ||
+        !address.city ||
+        !address.cityCode ||
+        !address.state
+      ) {
+        navigate("/address");
+        return;
+      }
       const token = await getToken();
-      const response = await axios.get(
-        "/api/orders/checkout",
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await axios.get("/api/orders/checkout", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (response.data.success) {
+        setCart([]);
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
       console.error("Error removing product:", error);
-      alert("Error removing product.");
+      toast.error("Error removing product.");
     }
   };
+  console.log(address);
   return cart.length == 0 ? (
     <div className="h-screen flex justify-center items-center text-4xl">
       There are no products in your cart

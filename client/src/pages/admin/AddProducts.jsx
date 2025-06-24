@@ -7,9 +7,8 @@ import Loading from "../../components/Loading";
 
 const AddProducts = () => {
   const { axios, user } = useAppContext();
-  const {getToken}=useAppContext()
+  const { getToken } = useAppContext();
   const [title, setTitle] = useState("");
-  const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(null);
   const [image, setImage] = useState(null);
@@ -51,16 +50,17 @@ const AddProducts = () => {
       const productData = {
         title: title,
         sellerId: user.id,
-        location: location,
         description: description,
         price: price,
         image_path: imageUrl,
         category: category,
         condition: condition,
       };
-      const token = await getToken()
-      const response = await axios.post("/api/products/add", productData, {headers: {Authorization: `Bearer ${token}`}});
-      
+      const token = await getToken();
+      const response = await axios.post("/api/products/add", productData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       if (response.data.success) {
         setIsLoading(false);
         toast.success(response.data.message);
@@ -96,13 +96,14 @@ const AddProducts = () => {
           </div>
           <div>
             <label className="block font-medium mb-2 mt-5 text-[#F84565]">
-              Pickup Location
+              Price
             </label>
             <input
+              type="number"
               required
-              value={location}
-              onChange={(event) => setLocation(event.target.value)}
-              placeholder="Pickup Location"
+              value={price}
+              onChange={(event) => setPrice(event.target.value)}
+              placeholder="Price"
               className="border border-gray-600 rounded-md py-1 px-2"
             />
           </div>
@@ -119,18 +120,6 @@ const AddProducts = () => {
           placeholder="Describe Product"
         ></textarea>
 
-        <label className="block font-medium mb-2 mt-5 text-[#F84565]">
-          Price
-        </label>
-        <input
-          type="number"
-          required
-          value={price}
-          onChange={(event) => setPrice(event.target.value)}
-          placeholder="Price"
-          className="border border-gray-600 rounded-md py-1 px-2"
-        />
-
         {/* Image Upload Section */}
         <label className="block font-medium mb-2 mt-5 text-[#F84565]">
           Product Image
@@ -142,13 +131,6 @@ const AddProducts = () => {
           className="border border-gray-600 rounded-md py-1 px-2"
         />
 
-        {image && (
-          <img
-            src={image}
-            alt="Product Preview"
-            className="mt-5 w-40 h-auto rounded-md border border-gray-300"
-          />
-        )}
         <div className="flex gap-20">
           <div>
             <label className="block font-medium mb-2 mt-5 text-[#F84565]">

@@ -7,10 +7,10 @@ import { useAppContext } from "../context/AppContext.jsx";
 
 const ProductDetails = () => {
   const { axios } = useAppContext();
-  const { getToken } = useAppContext();
+  const { getToken, cart, setCart } = useAppContext();
+  const { user } = useAppContext();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-
   const getProductDetails = async () => {
     try {
       const { data } = await axios.get(`/api/products/product-details/${id}`);
@@ -30,23 +30,27 @@ const ProductDetails = () => {
 
   const handleAddToCart = async () => {
     const token = await getToken();
-    try {
-      const response = await axios.post(
-        "/api/orders/cart/add",
-        { productId: product._id },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      if (response.data.success) {
-        toast.success(response.data.message);
-      } else {
-        toast.error(response.data.message);
+    if (user) {
+      try {
+        const response = await axios.post(
+          "/api/orders/cart/add",
+          { productId: product._id },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (response.data.success) {
+          setCart([...cart, product])
+          toast.success(response.data.message);
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        console.error("Error removing product:", error);
+        alert("Error removing product.");
       }
-    } catch (error) {
-      console.error("Error removing product:", error);
-      alert("Error removing product.");
+    } else {
+      toast.error("Login your account first");
     }
   };
-
   return product ? (
     <div className=" max-md:m-2 max-md:mt-20 md:m-30 ">
       <div className=" max-md:px-1 max-md:py-3 md:px-10 md:py-5 flex justify-center max-md:flex-col gap-10 items-center">
@@ -65,6 +69,7 @@ const ProductDetails = () => {
           </p>
           <button
             onClick={handleAddToCart}
+            disabled={cart.some(item => item._id === product._id)}
             className="bg-[#F84565] py-2 px-6 font-medium rounded-lg mt-5 cursor-pointer hover:bg-[#D63854]"
           >
             Add To Cart
@@ -74,9 +79,17 @@ const ProductDetails = () => {
       <div className="flex flex-col justify-center my-10  items-center">
         <BlurCircle top="650px" left="200px" />
         <p className="text-center text-4xl m-10 font-medium">Seller Details</p>
-        <div className="text-center p-5 backdrop-blur border border-[#D63854]/20 bg-[#D63854]/10  rounded-lg mt-5 max-md:w-[80%] md:w-[50%]">
-          <p>{product.sellerId.name}</p>
-          <p>{product.location}</p>
+        <div className="text-center p-5 text-lg backdrop-blur border border-[#D63854]/20 bg-[#D63854]/10  rounded-lg mt-5 max-md:w-[80%] md:w-[50%]">
+          <p>
+            <span className="text-[#F84565]">Seller:</span> &nbsp;{" "}
+            {product.sellerId.name}
+          </p>
+          <p>
+            <span className="text-[#F84565]">Address:</span> &nbsp;{" "}
+            {product.sellerId.area}, {product.sellerId.city},{" "}
+            {product.sellerId.city_code}, {product.sellerId.state}
+          </p>
+
           <button className="bg-[#F84565] py-2 px-4 font-medium rounded-lg mt-5 cursor-pointer hover:bg-[#D63854]">
             Contact
           </button>

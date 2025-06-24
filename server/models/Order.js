@@ -6,6 +6,7 @@ const orderSchema = new mongoose.Schema(
     sellerId: { type: String, ref: "User", required: true },
     buyerId: { type: String, ref: "User", required: true },
     price: { type: Number, required: true },
+    status: {type: String},
   },
   { timestamps: true }
 );

@@ -6,20 +6,20 @@ import {
 } from "lucide-react";
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useAppContext } from "../../context/AppContext";
 
 const AdminSidebar = () => {
-  const user = {
-    firstName: "Admin",
-    lastName: "User",
-  };
+  const { user } = useAppContext();
   const adminNavLinks = [
     { name: "Dashboard", path: "/admin", icon: LayoutDashboardIcon },
     { name: "Add Products", path: "/admin/add-products", icon: PlusSquareIcon },
-    { name: "Chat Box", path: "/admin/chat-box", icon: MessageCircleMoreIcon },
+    { name: "Order Request", path: "/admin/order-request", icon: MessageCircleMoreIcon },
     { name: "List Products", path: "/admin/list-products", icon: ListIcon },
   ];
+
   return (
     <div className="h-[calc(10@vh-64px)] md:flex flex-col items-center pt-8 max-w-13 md:max-w-60 w-full border-r border-gray-300/20 text-sm">
+      <img className="rounded-full h-15 w-15" src={user.imageUrl} alt="" />
       <p className="mt-2 text-base max-md:hidden">
         {user.firstName} {user.lastName}
       </p>

@@ -6,12 +6,14 @@ const userSchema = new mongoose.Schema({
     email: {type: String, required: true},
     image: {type: String, required: true},
     cartitemid: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
-    ordersid: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
+    ordersid: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
     productsid: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
     area: {type: String},
     city: {type: String},
     city_code: {type: String},
     state: {type: String},
+    buy_requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
+    sell_requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
 })
 
 const User = mongoose.model('User', userSchema)

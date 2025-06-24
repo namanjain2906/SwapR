@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 const CartCard = ({ Image, Title, Description, Price, ProductId }) => {
   const { axios } = useAppContext();
   const { getToken } = useAppContext();
+  const { cart, setCart } = useAppContext();
 
   const handleRemove = async (ProductId) => {
     const token = await getToken();
@@ -15,11 +16,11 @@ const CartCard = ({ Image, Title, Description, Price, ProductId }) => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.data.success) {
+        setCart(cart.filter((product)=>product._id !== ProductId))
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
       }
-      console.log(response);
     } catch (error) {}
   };
 

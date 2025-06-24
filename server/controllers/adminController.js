@@ -6,7 +6,7 @@ export const getProductsList = async (req, res) => {
     const { userId } = req.auth();
     const products = await Product.find({
       sellerId: userId,
-    });
+    }); 
     res.json({ success: true, products: products });
   } catch (error) {
     console.log(error);
@@ -26,6 +26,23 @@ export const saveAddress = async (req, res) => {
     };
     await User.findByIdAndUpdate(userId, addressData);
     res.json({ success: true, message: "Address Saved" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const getAddress = async (req, res) => {
+  try {
+    const { userId } = req.auth();
+    const userData = await User.findById(userId);
+    const address = {
+      area: userData.area,
+      city: userData.city,
+      cityCode: userData.city_code,
+      state: userData.state,
+    };
+    res.json({ success: true, address: address });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });

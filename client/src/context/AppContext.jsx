@@ -3,7 +3,7 @@ import axios from "axios";
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 import { useAuth, useUser } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const AppContext = createContext();
 
@@ -11,8 +11,10 @@ export const AppProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [address, setAddress] = useState(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useUser();
   const { getToken } = useAuth();
 
@@ -31,21 +33,15 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [location.pathname]);
 
   const fetchCart = async () => {
     try {
       const token = await getToken();
-      console.log(token)
       const { data } = await axios.get("/api/orders/cart", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log(data)
-      if (data.success) {
-        setCart(data.cart);
-      } else {
-        toast.error(data.message);
-      }
+      setCart(data.cart);
     } catch (error) {
       console.error(error.message);
     }
@@ -54,14 +50,22 @@ export const AppProvider = ({ children }) => {
   const fetchOrders = async () => {
     try {
       const token = await getToken();
-      const { data } = await axios.get("/api/orders/orders", {
+      const { data } = await axios.get("/api/orders/confirmed", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (data.success) {
-        setOrders(data.orders);
-      } else {
-        toast.error(data.message);
-      }
+      setOrders(data.orders);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const getAddress = async () => {
+    try {
+      const token = await getToken();
+      const {data} = await axios.get("/api/admin/address", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setAddress(data.address)
     } catch (error) {
       console.error(error.message);
     }
@@ -70,15 +74,24 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     if (user) {
       fetchOrders();
-    }
-  }, [user, orders]);
-  useEffect(() => {
-    if (user) {
       fetchCart();
+      getAddress();
     }
-  }, [user, cart]);
-
-  const value = { axios, user, products, cart, orders, getToken, navigate };
+  }, [user, location.pathname]);
+  
+  const value = {
+    axios,
+    user,
+    address,
+    products,
+    cart,
+    orders,
+    setProducts,
+    setCart,
+    setOrders,
+    getToken,
+    navigate,
+  };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 

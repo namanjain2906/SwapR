@@ -6,14 +6,11 @@ import ProductCard from "../components/ProductCard";
 
 const Category = () => {
   const { axios } = useAppContext();
-  console.log(axios)
   const { category } = useParams();
-  console.log(category)
   const [products, setProducts] = useState([]);
   const getProducts = async () => {
     try {
       const { data } = await axios.get(`/api/products/categories/${category}`);
-      console.log(data)
       if (data.success) {
         setProducts(data.products);
       } else {
