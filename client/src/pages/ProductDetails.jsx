@@ -69,7 +69,7 @@ const ProductDetails = () => {
           </p>
           <button
             onClick={handleAddToCart}
-            disabled={cart.some(item => item._id === product._id)}
+            disabled={Array.isArray(cart) && cart.some(item => item._id === product._id)}
             className="bg-[#F84565] py-2 px-6 font-medium rounded-lg mt-5 cursor-pointer hover:bg-[#D63854]"
           >
             Add To Cart
