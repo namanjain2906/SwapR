@@ -50,7 +50,7 @@ export const allProducts = async (req, res) => {
 export const categoryProducts = async (req, res) => {
   try {
     const { category } = req.params;
-    const products = await Product.find({ category: category.toLowerCase() });
+    const products = await Product.find({ category: category.toLowerCase(), ordered: false });
     res.json({ success: true, products: products });
   } catch (error) {
     console.log(error);
