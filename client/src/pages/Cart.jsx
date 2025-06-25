@@ -9,7 +9,7 @@ const Cart = () => {
   const { cart, setCart, address } = useAppContext();
   const { axios, getToken } = useAppContext();
   const navigate = useNavigate();
-
+  console.log(cart)
   const handleCheckout = async () => {
     try {
       // Defensive check for address object and fields

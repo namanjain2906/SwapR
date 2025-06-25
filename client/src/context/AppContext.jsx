@@ -1,9 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
-import { useAuth, useUser } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth, useUser } from "@clerk/clerk-react";
+
+
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 export const AppContext = createContext();
 
@@ -11,11 +13,11 @@ export const AppProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
-  const [address, setAddress] = useState(null);
+  const [address, setAddress] = useState({});
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const { getToken } = useAuth();
 
   const fetchProducts = async () => {
@@ -30,10 +32,6 @@ export const AppProvider = ({ children }) => {
       console.error(error.message);
     }
   };
-
-  useEffect(() => {
-    fetchProducts();
-  }, [location.pathname]);
 
   const fetchCart = async () => {
     try {
@@ -62,23 +60,24 @@ export const AppProvider = ({ children }) => {
   const getAddress = async () => {
     try {
       const token = await getToken();
-      const {data} = await axios.get("/api/admin/address", {
+      const { data } = await axios.get("/api/admin/address", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setAddress(data.address)
+      setAddress(data.address || {});
     } catch (error) {
       console.error(error.message);
     }
   };
 
   useEffect(() => {
-    if (user) {
+    if (isLoaded && user) {
+      fetchProducts();
       fetchOrders();
       fetchCart();
       getAddress();
     }
-  }, [user, location.pathname]);
-  
+  }, [isLoaded, user, location.pathname]);
+
   const value = {
     axios,
     user,
@@ -92,6 +91,7 @@ export const AppProvider = ({ children }) => {
     getToken,
     navigate,
   };
+
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
