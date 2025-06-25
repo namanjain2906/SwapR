@@ -41,7 +41,7 @@ const Navbar = () => {
       </Link>
 
       <div
-        className={`max-md:absolute top-0 left-0 backdrop-blur max-md:font-medium md:py-3 md:px-6 md:gap-3 lg:gap-16 bg-black/70 max-md:h-screen flex flex-col md:flex-row justify-center items-center min-md:rounded-full md:border md:bg-white/10 md:border-gray-300/20 overflow-hidden transition-[width] duration-300
+        className={`max-md:absolute top-0 left-0 backdrop-blur max-md:font-medium max-md:text-2xl md:py-3 md:px-6 max-md:gap-8 md:gap-3 lg:gap-16 bg-black/70 max-md:h-screen flex flex-col md:flex-row justify-center items-center min-md:rounded-full md:border md:bg-white/10 md:border-gray-300/20 overflow-hidden transition-[width] duration-300
         ${isOpen ? "max-md:w-full" : "max-md:w-0"}`}
       >
         <XIcon

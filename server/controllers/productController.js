@@ -3,7 +3,6 @@ import User from "../models/User.js";
 
 export const addProduct = async (req, res) => {
   const { userId } = req.auth();
-  console.log(userId)
   try {
     const {
       title,

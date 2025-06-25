@@ -34,12 +34,12 @@ const Address = () => {
   };
 
   return (
-    <div className="flex flex-col gap-8 justify-center items-center h-screen">
+    <div className="flex flex-col gap-8 mt-15 justify-center items-center h-screen">
       <p className="font-medium text-3xl flex">
         Enter your &nbsp; <span className="text-[#F84565]">Address</span>
       </p>
-      <div className="bg-white/10 p-10 border-2 border-gray-300/20 rounded-xl">
-        <div className="flex gap-10">
+      <div className="bg-white/10 max-md:p-5 p-10 border-2 border-gray-300/20 rounded-xl">
+        <div className="md:flex gap-10">
           <div>
             <label className="block font-medium mb-2 mt-5 text-[#F84565]">
               House No. / Road Name / Area
@@ -65,7 +65,7 @@ const Address = () => {
             />
           </div>
         </div>
-        <div className="flex gap-10">
+        <div className="md:flex gap-10">
           <div>
             <label className="block font-medium mb-2 mt-5 text-[#F84565]">
               City Code

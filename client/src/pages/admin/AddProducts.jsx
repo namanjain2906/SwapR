@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
-import { useUser } from "@clerk/clerk-react";
 import BlurCircle from "../../components/BlurCircle";
 import Loading from "../../components/Loading";
 
@@ -30,12 +29,11 @@ const AddProducts = () => {
         return;
       }
 
-      // 1. Upload image to Cloudinary
       const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
       const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
       const formData = new FormData();
       formData.append("file", image);
-      formData.append("upload_preset", uploadPreset); // Set this in Cloudinary
+      formData.append("upload_preset", uploadPreset);
       formData.append("cloud_name", cloudName);
       formData.append("folder", "swapr");
 
@@ -44,8 +42,6 @@ const AddProducts = () => {
         formData
       );
       const imageUrl = await cloudinaryRes.data.secure_url;
-
-      // 2. Send product data to backend
 
       const productData = {
         title: title,
@@ -57,7 +53,6 @@ const AddProducts = () => {
         condition: condition,
       };
       const token = await getToken();
-      console.log(token)
       const response = await axios.post("/api/products/add", productData, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -82,7 +77,7 @@ const AddProducts = () => {
         Add a &nbsp; <span className="text-[#F84565]">Product</span>
       </p>
       <div className="mt-8">
-        <div className="flex gap-20">
+        <div className="md:flex gap-20">
           <div>
             <label className="block font-medium mb-2 mt-5 text-[#F84565]">
               Product Title
@@ -117,11 +112,10 @@ const AddProducts = () => {
           value={description}
           maxLength={120}
           onChange={(event) => setDescription(event.target.value)}
-          className="border border-gray-600 rounded-md py-1 px-2 w-100"
+          className="border border-gray-600 rounded-md py-1 px-2 md:w-100 max-md:w-[80%]"
           placeholder="Describe Product"
         ></textarea>
 
-        {/* Image Upload Section */}
         <label className="block font-medium mb-2 mt-5 text-[#F84565]">
           Product Image
         </label>
@@ -129,10 +123,10 @@ const AddProducts = () => {
           type="file"
           accept="image/*"
           onChange={handleImageChange}
-          className="border border-gray-600 rounded-md py-1 px-2"
+          className="border border-gray-600 rounded-md py-1 px-2 max-md:w-[80%]"
         />
 
-        <div className="flex gap-20">
+        <div className="md:flex gap-20">
           <div>
             <label className="block font-medium mb-2 mt-5 text-[#F84565]">
               Category

@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth, useUser } from "@clerk/clerk-react";
 
-
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 export const AppContext = createContext();
@@ -70,8 +69,8 @@ export const AppProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    fetchProducts();
     if (isLoaded && user) {
-      fetchProducts();
       fetchOrders();
       fetchCart();
       getAddress();

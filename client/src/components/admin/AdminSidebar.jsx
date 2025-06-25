@@ -19,7 +19,7 @@ const AdminSidebar = () => {
 
   return (
     <div className="h-[calc(10@vh-64px)] md:flex flex-col items-center pt-8 max-w-13 md:max-w-60 w-full border-r border-gray-300/20 text-sm">
-      <img className="rounded-full h-15 w-15" src={user.imageUrl} alt="" />
+      <img className="rounded-full h-15 w-15 max-md:h-8 max-md:w-8 " src={user.imageUrl} alt="" />
       <p className="mt-2 text-base max-md:hidden">
         {user.firstName} {user.lastName}
       </p>

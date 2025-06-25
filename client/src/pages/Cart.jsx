@@ -9,7 +9,6 @@ const Cart = () => {
   const { cart, setCart, address } = useAppContext();
   const { axios, getToken } = useAppContext();
   const navigate = useNavigate();
-  console.log(cart)
   const handleCheckout = async () => {
     try {
       // Defensive check for address object and fields
@@ -31,7 +30,7 @@ const Cart = () => {
       });
 
       if (response.data.success) {
-        setCart([]); // Clear cart on successful checkout
+        setCart([]);
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
@@ -42,11 +41,10 @@ const Cart = () => {
     }
   };
 
-  // Show fallback UI if cart is empty or invalid
   if (!Array.isArray(cart) || cart.length === 0) {
     return (
-      <div className="h-screen flex justify-center items-center text-4xl">
-        There are no products in your cart
+      <div className="h-screen flex justify-center items-center md:text-4xl max-md:text-2xl p-10 text-center">
+        Your cart is empty
       </div>
     );
   }
