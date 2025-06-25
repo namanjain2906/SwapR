@@ -57,6 +57,7 @@ const AddProducts = () => {
         condition: condition,
       };
       const token = await getToken();
+      console.log(token)
       const response = await axios.post("/api/products/add", productData, {
         headers: { Authorization: `Bearer ${token}` },
       });
