@@ -56,32 +56,34 @@ const MyOrders = () => {
           <BlurCircle top="600px" left="70px" />
           <BlurCircle top="70px" right="0px" />
 
-          {orders.map((order) => (
-            <ProductCard
-              key={order._id} // Ensure unique key
-              ProductId={order.productId}
-              Price={order.price}
-              Image={order.productId.image_path}
-              Title={order.productId.title}
-              Description={order.productId.description}
-            />
-          ))}
+          {Array.isArray(orders) &&
+            orders.map((order) => (
+              <ProductCard
+                key={order._id} // Ensure unique key
+                ProductId={order.productId}
+                Price={order.price}
+                Image={order.productId.image_path}
+                Title={order.productId.title}
+                Description={order.productId.description}
+              />
+            ))}
         </div>
       ) : (
         <div className="md:m-10 max-md:m-6 max-md:mt-20 flex flex-wrap justify-evenly gap-10 items-center">
           <BlurCircle top="600px" left="70px" />
           <BlurCircle top="70px" right="0px" />
 
-          {pendingOrders.map((pendingOrder) => (
-            <ProductCard
-              key={pendingOrder._id} // Ensure unique key
-              ProductId={pendingOrder.productId}
-              Price={pendingOrder.price}
-              Image={pendingOrder.productId.image_path}
-              Title={pendingOrder.productId.title}
-              Description={pendingOrder.productId.description}
-            />
-          ))}
+          {Array.isArray(pendingOrders) &&
+            pendingOrders.map((pendingOrder) => (
+              <ProductCard
+                key={pendingOrder._id} // Ensure unique key
+                ProductId={pendingOrder.productId}
+                Price={pendingOrder.price}
+                Image={pendingOrder.productId.image_path}
+                Title={pendingOrder.productId.title}
+                Description={pendingOrder.productId.description}
+              />
+            ))}
         </div>
       )}
     </div>

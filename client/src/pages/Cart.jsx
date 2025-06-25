@@ -36,7 +36,7 @@ const Cart = () => {
     }
   };
   console.log(address);
-  return cart.length == 0 ? (
+  return !Array.isArray(cart) || cart.length === 0 ? (
     <div className="h-screen flex justify-center items-center text-4xl">
       There are no products in your cart
     </div>

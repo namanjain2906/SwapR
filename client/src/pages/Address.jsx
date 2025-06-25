@@ -5,10 +5,10 @@ import { useAppContext } from "../context/AppContext";
 const Address = () => {
   const { axios } = useAppContext();
   const { getToken, address } = useAppContext();
-  const [area, setArea] = useState(address.area);
-  const [city, setCity] = useState(address.city);
-  const [cityCode, setCityCode] = useState(address.cityCode);
-  const [state, setState] = useState(address.state);
+  const [area, setArea] = useState(address?.area || "");
+  const [city, setCity] = useState(address?.city || "");
+  const [cityCode, setCityCode] = useState(address?.cityCode || "");
+  const [state, setState] = useState(address?.state || "");
 
   const handleSaveAddress = async () => {
     try {

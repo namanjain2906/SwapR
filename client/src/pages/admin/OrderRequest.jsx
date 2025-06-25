@@ -92,46 +92,49 @@ const OrderRequest = () => {
             </tr>
           </thead>
           <tbody className="text-sm font-light">
-            {orderRequests.map((request) => (
-              <tr
-                key={request._id}
-                className="border-b border-[#F84565]/10 bg-[#F84565]/5 even:bg-[#F84565]/10"
-              >
-                <td className="p-2 min-w-45 pl-5">{request.productId.title}</td>
-                <td className="p-2 min-w-45 pl-5">
-                  &#8377;{request.productId.price}
-                </td>
-                <td className="p-2 min-w-45 pl-5">{request.buyerId.name}</td>
-                <td className="p-2 min-w-45 pl-5">
-                  <button
-                    onClick={() =>
-                      handleConfirm(
-                        request.productId._id,
-                        request._id,
-                        request.buyerId._id
-                      )
-                    }
-                    className="text-green-400/90 cursor-pointer hover:underline"
-                  >
-                    Confirm
-                  </button>
-                </td>
-                <td className="p-2 min-w-45 pl-5">
-                  <button
-                    onClick={() =>
-                      handleDecline(
-                        request.productId._id,
-                        request._id,
-                        request.buyerId._id
-                      )
-                    }
-                    className="text-red-400/90 cursor-pointer hover:underline"
-                  >
-                    Decline
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {Array.isArray(orderRequests) &&
+              orderRequests.map((request) => (
+                <tr
+                  key={request._id}
+                  className="border-b border-[#F84565]/10 bg-[#F84565]/5 even:bg-[#F84565]/10"
+                >
+                  <td className="p-2 min-w-45 pl-5">
+                    {request.productId.title}
+                  </td>
+                  <td className="p-2 min-w-45 pl-5">
+                    &#8377;{request.productId.price}
+                  </td>
+                  <td className="p-2 min-w-45 pl-5">{request.buyerId.name}</td>
+                  <td className="p-2 min-w-45 pl-5">
+                    <button
+                      onClick={() =>
+                        handleConfirm(
+                          request.productId._id,
+                          request._id,
+                          request.buyerId._id
+                        )
+                      }
+                      className="text-green-400/90 cursor-pointer hover:underline"
+                    >
+                      Confirm
+                    </button>
+                  </td>
+                  <td className="p-2 min-w-45 pl-5">
+                    <button
+                      onClick={() =>
+                        handleDecline(
+                          request.productId._id,
+                          request._id,
+                          request.buyerId._id
+                        )
+                      }
+                      className="text-red-400/90 cursor-pointer hover:underline"
+                    >
+                      Decline
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

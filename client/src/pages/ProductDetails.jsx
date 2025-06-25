@@ -37,8 +37,9 @@ const ProductDetails = () => {
           { productId: product._id },
           { headers: { Authorization: `Bearer ${token}` } }
         );
+        console.log(response);
         if (response.data.success) {
-          setCart([...cart, product])
+          setCart([...(Array.isArray(cart) ? cart : []), product]);
           toast.success(response.data.message);
         } else {
           toast.error(response.data.message);
@@ -69,7 +70,10 @@ const ProductDetails = () => {
           </p>
           <button
             onClick={handleAddToCart}
-            disabled={Array.isArray(cart) && cart.some(item => item._id === product._id)}
+            disabled={
+              Array.isArray(cart) &&
+              cart.some((item) => item._id === product._id)
+            }
             className="bg-[#F84565] py-2 px-6 font-medium rounded-lg mt-5 cursor-pointer hover:bg-[#D63854]"
           >
             Add To Cart
