@@ -9,43 +9,56 @@ const Cart = () => {
   const { cart, setCart, address } = useAppContext();
   const { axios, getToken } = useAppContext();
   const navigate = useNavigate();
+
   const handleCheckout = async () => {
     try {
+      // Defensive check for address object and fields
       if (
+        !address ||
         !address.area ||
         !address.city ||
         !address.cityCode ||
         !address.state
       ) {
+        toast.error("Please complete your address first.");
         navigate("/address");
         return;
       }
+
       const token = await getToken();
       const response = await axios.get("/api/orders/checkout", {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       if (response.data.success) {
-        setCart([]);
+        setCart([]); // Clear cart on successful checkout
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.error("Error removing product:", error);
-      toast.error("Error removing product.");
+      console.error("Error during checkout:", error);
+      toast.error("Something went wrong. Please try again.");
     }
   };
-  console.log(address);
-  return !Array.isArray(cart) || cart.length === 0 ? (
-    <div className="h-screen flex justify-center items-center text-4xl">
-      There are no products in your cart
-    </div>
-  ) : (
-    <div className=" max-md:m-3 max-md:mt-20 md:m-30 max-md:p-5 md:px-10 flex flex-col justify-center items-center gap-5">
+
+  // Show fallback UI if cart is empty or invalid
+  if (!Array.isArray(cart) || cart.length === 0) {
+    return (
+      <div className="h-screen flex justify-center items-center text-4xl">
+        There are no products in your cart
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-md:m-3 max-md:mt-20 md:m-30 max-md:p-5 md:px-10 flex flex-col justify-center items-center gap-5">
       <BlurCircle top="50px" left="80px" />
       <BlurCircle top="500px" right="80px" />
+
       {cart.map((item) => (
         <CartCard
+          key={item._id}
           ProductId={item._id}
           Price={item.price}
           Image={item.image_path}
@@ -53,6 +66,7 @@ const Cart = () => {
           Description={item.description}
         />
       ))}
+
       <div className="flex gap-10">
         <button
           onClick={handleCheckout}
