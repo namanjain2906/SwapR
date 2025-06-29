@@ -38,7 +38,7 @@ const AddProducts = () => {
       formData.append("folder", "swapr");
 
       const cloudinaryRes = await axios.post(
-        "https://api.cloudinary.com/v1_1/dtjcdcqkz/image/upload",
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
         formData
       );
       const imageUrl = await cloudinaryRes.data.secure_url;
