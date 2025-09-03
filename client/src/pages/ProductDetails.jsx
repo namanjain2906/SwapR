@@ -54,7 +54,7 @@ const ProductDetails = () => {
   };
   return product ? (
     <div className=" max-md:m-2 max-md:mt-20 md:m-30 ">
-      <div className=" max-md:px-1 max-md:py-3 md:px-10 md:py-5 flex justify-center max-md:flex-col gap-10 items-center">
+      <div className=" max-md:px-1 max-md:py-3 md:px-20 md:py-5 flex max-md:flex-col gap-50 max-md:gap-12 items-center">
         <BlurCircle top="50px" right="150px" />
         <img
           className="rounded-xl md:h-100 md:w-auto max-md:w-full max-md:h-auto "

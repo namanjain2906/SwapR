@@ -43,9 +43,13 @@ const Cart = () => {
 
   if (!Array.isArray(cart) || cart.length === 0) {
     return (
-      <div className="h-screen flex justify-center items-center md:text-4xl max-md:text-2xl p-10 text-center">
-        Your cart is empty
-      </div>
+      <>
+        <BlurCircle top="50px" left="80px" />
+        <BlurCircle top="500px" right="80px" />
+        <div className="h-screen flex justify-center items-center md:text-4xl max-md:text-2xl p-10 text-center">
+          Your cart is empty
+        </div>
+      </>
     );
   }
 

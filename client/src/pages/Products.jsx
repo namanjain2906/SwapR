@@ -1,18 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import ProductCard from "../components/ProductCard";
 import BlurCircle from "../components/BlurCircle";
 import { useAppContext } from "../context/AppContext";
 
 const Products = () => {
   const { products } = useAppContext();
-  return (
-    <div className="md:m-30 max-md:m-6 max-md:mt-20 flex flex-wrap justify-evenly items-center">
+
+  return products.length===0 ? (
+    <>
+    <BlurCircle top="600px" left="70px"/>
+    <BlurCircle top="70px" right="0px"/>
+    <div className="h-screen flex justify-center items-center text-center max-md:text-2xl md:text-4xl">No Products to display</div>
+    </>
+  ) : (
+    <div className="md:m-12 max-md:m-6 flex h-screen flex-wrap justify-evenly items-center">
       <BlurCircle top="600px" left="70px" />
       <BlurCircle top="70px" right="0px" />
 
       {products.map((product) => (
         <ProductCard
-          key={product._id} // Ensure unique key
+          key={product._id}
           ProductId={product._id}
           Price={product.price}
           Image={product.image_path}
@@ -21,7 +28,7 @@ const Products = () => {
         />
       ))}
     </div>
-  );
+  )
 };
 
 export default Products;
