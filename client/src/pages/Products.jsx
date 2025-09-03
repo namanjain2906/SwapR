@@ -6,14 +6,16 @@ import { useAppContext } from "../context/AppContext";
 const Products = () => {
   const { products } = useAppContext();
 
-  return products.length===0 ? (
+  return products.length === 0 ? (
     <>
-    <BlurCircle top="600px" left="70px"/>
-    <BlurCircle top="70px" right="0px"/>
-    <div className="h-screen flex justify-center items-center text-center max-md:text-2xl md:text-4xl">No Products to display</div>
+      <BlurCircle top="600px" left="70px" />
+      <BlurCircle top="70px" right="0px" />
+      <div className="h-screen flex justify-center items-center text-center max-md:text-2xl md:text-4xl">
+        No Products to display
+      </div>
     </>
   ) : (
-    <div className="md:m-12 max-md:m-6 flex h-screen flex-wrap justify-evenly items-center">
+    <div className="md:m-12 max-md:m-6 flex flex-wrap justify-evenly items-center">
       <BlurCircle top="600px" left="70px" />
       <BlurCircle top="70px" right="0px" />
 
@@ -28,7 +30,7 @@ const Products = () => {
         />
       ))}
     </div>
-  )
+  );
 };
 
 export default Products;
