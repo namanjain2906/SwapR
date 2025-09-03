@@ -15,7 +15,7 @@ const Products = () => {
       </div>
     </>
   ) : (
-    <div className="md:m-12 max-md:m-6 flex flex-wrap justify-evenly items-center">
+    <div className="md:m-12 md:mt-25 max-md:mt-25 max-md:m-6 flex flex-wrap justify-evenly items-center">
       <BlurCircle top="600px" left="70px" />
       <BlurCircle top="70px" right="0px" />
 
