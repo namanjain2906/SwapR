@@ -49,16 +49,17 @@ const ListProducts = () => {
           </thead>
           <tbody className="text-sm font-light">
             {products.map((product) => (
-              <tr key={product._id} className="border-b border-[#F84565]/10 bg-[#F84565]/5 even:bg-[#F84565]/10">
-                <td className="p-2 min-w-45 pl-5">
-                  {product.title}
-                </td>
+              <tr
+                key={product._id}
+                className="border-b border-[#F84565]/10 bg-[#F84565]/5 even:bg-[#F84565]/10"
+              >
+                <td className="p-2 min-w-45 pl-5">{product.title}</td>
                 <td className="p-2 min-w-45 pl-5">&#8377;{product.price}</td>
 
-                {product.ordered ? (
-                  <td className="p-2 min-w-45 pl-5">yes</td>
-                ) : (
+                {product.available ? (
                   <td className="p-2 min-w-45 pl-5">no</td>
+                ) : (
+                  <td className="p-2 min-w-45 pl-5">yes</td>
                 )}
               </tr>
             ))}

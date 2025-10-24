@@ -9,6 +9,12 @@ import {
   getOrderRequests,
   confirmOrder,
   declineOrder,
+  rentOrder,
+  confirmRent,
+  declineRent,
+  getRentOrders,
+  getRentPending,
+  getActiveRentals,
 } from "../controllers/orderController.js";
 
 const orderRouter = express.Router();
@@ -30,5 +36,17 @@ orderRouter.get("/checkout", orderCheckout);
 orderRouter.patch("/confirm/:productId", confirmOrder)
 
 orderRouter.patch("/decline/:productId", declineOrder)
+
+orderRouter.post("/rent", rentOrder);
+
+orderRouter.patch("/rent/confirm/:productId", confirmRent);
+
+orderRouter.patch("/rent/decline/:productId", declineRent);
+
+orderRouter.get("/rent/orders", getRentOrders);
+
+orderRouter.get("/rent/pending", getRentPending);
+
+orderRouter.get("/rent/active", getActiveRentals);
 
 export default orderRouter;

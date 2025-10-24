@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  ChartArea,
   CircleUserRound,
   MapPin,
   MenuIcon,
+  MessageCircleMore,
   Package,
   SearchIcon,
   XIcon,
@@ -135,6 +137,31 @@ const Navbar = () => {
             ></SearchIcon>
           )}
         </div>
+
+        {!user ? (
+          <div className="flex items-center gap-4">
+            <Link
+              
+              onClick={() => openSignIn()}
+              className="hover:text-gray-300"
+            >
+              <MessageCircleMore className="w-8 h-8" />
+            </Link>
+          </div>
+        ) : (
+          <div className="flex items-center gap-4">
+            <Link
+              to={"/chat"}
+              onClick={() => {
+                setIsOpen(false);
+                scrollTo(0, 0);
+              }}
+              className="hover:text-gray-300"
+            >
+              <MessageCircleMore className="w-8 h-8" />
+            </Link>
+          </div>
+        )}
 
         {!user ? (
           <button

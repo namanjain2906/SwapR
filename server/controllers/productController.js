@@ -13,7 +13,7 @@ export const addProduct = async (req, res) => {
       category,
       condition,
       inCart,
-      ordered,
+      available,
     } = req.body;
     const product = {
       title: title.toLowerCase(),
@@ -24,7 +24,7 @@ export const addProduct = async (req, res) => {
       category: category.toLowerCase(),
       condition: condition,
       inCart: inCart,
-      ordered: ordered,
+      available: available,
     };
     const response = await Product.create(product);
     await User.findByIdAndUpdate(userId, {
@@ -39,7 +39,7 @@ export const addProduct = async (req, res) => {
 
 export const allProducts = async (req, res) => {
   try {
-    const products = await Product.find({ ordered: false });
+    const products = await Product.find({ available: true });
     res.json({ success: true, products: products });
   } catch (error) {
     console.log(error);
@@ -50,7 +50,7 @@ export const allProducts = async (req, res) => {
 export const categoryProducts = async (req, res) => {
   try {
     const { category } = req.params;
-    const products = await Product.find({ category: category.toLowerCase(), ordered: false });
+    const products = await Product.find({ category: category.toLowerCase(), available: true });
     res.json({ success: true, products: products });
   } catch (error) {
     console.log(error);
@@ -76,10 +76,8 @@ export const productDetails = async (req, res) => {
 
 export const searchProduct = async (req, res) => {
   try {
-    console.log("hii");
     const { title } = req.params;
-    const productData = Product.find({ title: title, ordered: false });
-    console.log(productData);
+    const productData = await Product.find({ title: title, available: true });
     return res.json({ success: false, message: "Product not found" });
   } catch (error) {
     console.log(error);

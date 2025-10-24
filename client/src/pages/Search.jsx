@@ -10,7 +10,6 @@ const Search = () => {
   const searchProduct = products.filter((product) => {
     return product.title === title;
   });
-  console.log(searchProduct);
   return (
     <div className="md:m-30 max-md:m-6 max-md:mt-20 flex flex-wrap justify-evenly items-center">
       <BlurCircle top="600px" left="70px" />

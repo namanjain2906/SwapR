@@ -18,12 +18,12 @@ const Dashboard = () => {
       if (data.success) {
         setLiveProducts(
           data.products.filter((product) => {
-            return product.ordered === false;
+            return product.available === true;
           })
         );
         setSoldProducts(
           data.products.filter((product) => {
-            return product.ordered === true;
+            return product.available === false;
           })
         );
       } else {

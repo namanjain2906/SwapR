@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema(
     image_path: { type: String, required: true },
     category: { type: String, required: true },
     condition: {type: String, required: true},
-    ordered: {type: Boolean, default: false, required: true}
+    available: {type: Boolean, default: true, required: true}
   },
   { timestamps: true }
 );
