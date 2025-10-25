@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import Product from "../models/Product.js";
 import Rent from "../models/Rent.js";
 import mongoose from "mongoose";
+import { hasAddress } from "../middleware/ensureAddress.js";
 
 const completeRent = async (rentId) => {
 	const rent = await Rent.findById(rentId);
@@ -87,6 +88,14 @@ export const orderCheckout = async (req, res) => {
 	try {
 		const { userId } = req.auth();
 		const userData = await User.findById(userId).populate("cartitemid");
+
+		if (!hasAddress(userData)) {
+			return res.status(400).json({
+				success: false,
+				message: "Please add your address before placing an order.",
+			});
+		}
+
 		for (const item of userData.cartitemid) {
 			const orderDetail = await Order.create({
 				productId: item._id,
@@ -206,6 +215,15 @@ export const rentOrder = async (req, res) => {
 	try {
 		await releaseExpiredRentals();
 		const { userId } = req.auth();
+		const renter = await User.findById(userId);
+
+		if (!hasAddress(renter)) {
+			return res.status(400).json({
+				success: false,
+				message: "Please add your address before renting a product.",
+			});
+		}
+
 		const { productId, rentalRange } = req.body;
 		if (!rentalRange?.start || !rentalRange?.end) {
 			return res.status(400).json({ success: false, message: "Rental start and end dates are required" });

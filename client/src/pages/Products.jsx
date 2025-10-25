@@ -18,40 +18,50 @@ const Products = () => {
     })();
   }, [axios]);
 
-  return products.length === 0 ? (
-    <>
-      <BlurCircle top="600px" left="70px" />
-      <BlurCircle top="70px" right="0px" />
-      <div className="h-screen flex justify-center items-center text-center max-md:text-2xl md:text-4xl">
-        No Products to display
-      </div>
-    </>
-  ) : (
+  const hasProducts = Array.isArray(products) && products.length > 0;
+  const hasRented = Array.isArray(rented) && rented.length > 0;
+
+  if (!hasProducts && !hasRented) {
+    return (
+      <>
+        <BlurCircle top="600px" left="70px" />
+        <BlurCircle top="70px" right="0px" />
+        <div className="h-screen flex justify-center items-center text-center max-md:text-2xl md:text-4xl">
+          No products available
+        </div>
+      </>
+    );
+  }
+
+  return (
     <div className="relative md:mt-25 max-md:mt-25 px-6 md:px-12 py-8">
       <BlurCircle top="750px" left="70px" />
       <BlurCircle top="120px" right="10px" />
       <BlurCircle top="30px" left="300px" />
       <BlurCircle top="30px" left="300px" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-start">
-        {products.map((product) => (
-          <div key={product._id} className="flex flex-col gap-2">
-            <ProductCard
-              ProductId={product._id}
-              Price={product.price}
-              Image={product.image_path}
-              Title={product.title}
-              Description={product.description}
-            />
-            {!product.available && (
-              <span className="inline-block rounded-full bg-red-500/20 px-3 py-1 text-xs font-medium text-red-300">
-                Currently rented
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
 
-      {rented.length > 0 && (
+      {hasProducts && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-start">
+          {products.map((product) => (
+            <div key={product._id} className="flex flex-col gap-2">
+              <ProductCard
+                ProductId={product._id}
+                Price={product.price}
+                Image={product.image_path}
+                Title={product.title}
+                Description={product.description}
+              />
+              {!product.available && (
+                <span className="inline-block rounded-full bg-red-500/20 px-3 py-1 text-xs font-medium text-red-300">
+                  Currently rented
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {hasRented && (
         <section className="mt-12 w-full">
           <h2 className="mb-4 text-xl font-semibold text-white flex items-center gap-2">
             Currently rented products
