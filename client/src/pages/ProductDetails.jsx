@@ -254,7 +254,7 @@ const ProductDetails = () => {
 			<div className="flex flex-col justify-center my-10  items-center">
 				<BlurCircle top="650px" left="200px" />
 				<p className="text-center text-4xl m-10 font-medium">Seller Details</p>
-				<div className="text-center p-5 text-lg backdrop-blur border border-[#D63854]/20 bg-[#D63854]/10  rounded-lg mt-5 max-md:w-[80%] md:w-[50%]">
+				<div className="text-center h-screen p-5 text-lg backdrop-blur border border-[#D63854]/20 bg-[#D63854]/10  rounded-lg mt-5 max-md:w-[80%] md:w-[50%]">
 					<p>
 						<span className="text-[#F84565]">Seller:</span> &nbsp;{" "}
 						{product.sellerId.name}

@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import axios from "axios";
 
-const Chat = ({ onSelectConversation, onCloseSidebar } = {}) => {
+const Chat = ({ onSelectConversation } = {}) => {
   const { user } = useAppContext();
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
+  const sortedChats = useMemo(() => {
+    return [...chats].sort((a, b) => {
+      const aTime = new Date(a?.lastMessage?.createdAt || 0).getTime();
+      const bTime = new Date(b?.lastMessage?.createdAt || 0).getTime();
+      return bTime - aTime;
+    });
+  }, [chats]);
 
   useEffect(() => {
     if (!user?._id && !user?.id) return;
@@ -25,31 +32,21 @@ const Chat = ({ onSelectConversation, onCloseSidebar } = {}) => {
     })();
     return () => (cancelled = true);
   }, [user]);
-  console.log("Chats loaded:", chats);  
 
   return (
-    <div className="flex flex-col w-full md:h-screen md:max-w-[22rem] pt-25 border-b md:border-b-0 md:border-r border-gray-800 bg-[#0b0b0c] text-sm">
-      {/* top area / optional avatar */}
-      <div className="px-4 py-3 xl:py-4 flex items-center justify-between">
+    <div className="flex flex-col w-full h-[100svh] md:h-screen bg-[#0b0b0c] text-sm">
+      <div className="px-4 py-5 border-b border-gray-800/80">
         <div className="text-lg md:text-2xl font-semibold text-white">Chats</div>
-        {onCloseSidebar && (
-          <button
-            type="button"
-            onClick={onCloseSidebar}
-            className="md:hidden text-xs font-medium text-gray-400 hover:text-white transition"
-          >
-            Close
-          </button>
-        )}
+        <p className="text-xs text-gray-500 mt-1">Conversations</p>
       </div>
 
       <div className="flex-1 overflow-y-auto">
         {loading ? (
-          <div className="px-4 py-2 text-gray-400">Loading chats…</div>
-        ) : chats.length === 0 ? (
-          <div className="px-4 py-2 text-gray-400">No conversations yet</div>
+          <div className="px-4 py-5 text-gray-400">Loading chats...</div>
+        ) : sortedChats.length === 0 ? (
+          <div className="px-4 py-5 text-gray-400">No conversations yet</div>
         ) : (
-          chats.map((c) => {
+          sortedChats.map((c) => {
             const partner = c.partner || {};
             const displayName =
               partner.name ||
@@ -65,8 +62,8 @@ const Chat = ({ onSelectConversation, onCloseSidebar } = {}) => {
                 end
                 onClick={() => onSelectConversation?.()}
                 className={({ isActive }) =>
-                  `relative flex items-center gap-3 w-full py-3 px-4 md:px-5 text-gray-300 transition ${
-                    isActive ? "bg-[#F84565]/10 text-[#F84565]" : ""
+                  `relative flex items-center gap-3 w-full py-4 px-4 md:px-5 text-gray-300 transition border-b border-gray-900 ${
+                    isActive ? "bg-[#F84565]/12 text-[#ffd8df]" : "hover:bg-white/[0.02]"
                   }`
                 }
               >
@@ -78,10 +75,10 @@ const Chat = ({ onSelectConversation, onCloseSidebar } = {}) => {
                   )}
                 </div>
                 <div className="flex-1">
-                  <div className="text-sm font-medium">{displayName}</div>
-                  <div className="text-xs text-gray-500 truncate max-w-[160px]">{lastPreview}</div>
+                  <div className="text-base md:text-sm font-medium truncate">{displayName}</div>
+                  <div className="hidden md:block text-xs text-gray-500 truncate max-w-[160px]">{lastPreview}</div>
                 </div>
-                <div className="text-xs text-gray-500">
+                <div className="hidden md:block text-xs text-gray-500">
                   {c.lastMessage?.createdAt ? new Date(c.lastMessage.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""}
                 </div>
               </NavLink>

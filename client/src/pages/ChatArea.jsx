@@ -6,9 +6,8 @@ import toast from "react-hot-toast";
 
 const ChatArea = () => {
 	const { receiverId } = useParams();
-	const { onShowSidebar } = useOutletContext() ?? {};
+	const { onBackToChats } = useOutletContext() ?? {};
 	const { user } = useAppContext();
-	const api = axios; // use imported axios directly
 	const currentUserId = user?.id ?? user?._id ?? "local_me";
 
 	const [messages, setMessages] = useState([]);
@@ -53,7 +52,6 @@ const ChatArea = () => {
 		(async () => {
 			try {
 				const res = await axios.get(`/api/users/${receiverId}`);
-				console.log(res);
 				if (mounted && res?.data) {
 					const profile = res.data.user ?? res.data;
 					setReceiver(profile);
@@ -63,7 +61,7 @@ const ChatArea = () => {
 			}
 		})();
 		return () => (mounted = false);
-	}, [receiverId, axios]);
+	}, [receiverId]);
 
 	// Load existing messages for this conversation
 	useEffect(() => {
@@ -71,7 +69,7 @@ const ChatArea = () => {
 		let mounted = true;
 		(async () => {
 			try {
-				const res = await api.get(`/api/conversations/${receiverId}/messages`, {
+				const res = await axios.get(`/api/conversations/${receiverId}/messages`, {
 					params: { senderId: currentUserId, limit: 200 },
 				});
 				if (mounted) setMessages(res.data || []);
@@ -104,15 +102,13 @@ const ChatArea = () => {
 				};
 				socket.on("newMessage", onNew);
 			} catch (err) {
-				console.warn("socket.io-client not available — realtime disabled.");
+				console.warn("socket.io-client not available — realtime disabled.", err?.message || err);
 			}
 		})();
 
 		return () => {
 			if (socket && onNew) socket.off("newMessage", onNew);
-			try {
-				if (socket) socket.emit("leave", { conversationId: conversationKey, userId: currentUserId });
-			} catch (e) {}
+			if (socket) socket.emit("leave", { conversationId: conversationKey, userId: currentUserId });
 			if (socket) socket.disconnect();
 		};
 	}, [conversationKey, receiverId, currentUserId, pushMessage]);
@@ -148,7 +144,7 @@ const ChatArea = () => {
 		};
 
 		try {
-			const res = await api.post(`/api/conversations/${receiverId}/messages`, payload, {
+			const res = await axios.post(`/api/conversations/${receiverId}/messages`, payload, {
 				params: { senderId: currentUserId },
 			});
 			pushMessage(res.data);
@@ -177,35 +173,40 @@ const ChatArea = () => {
 	const headerStatus = "Online";
 
 	return (
-		<div className="flex flex-col h-[100svh] bg-[#0f0f10] text-white">
+		<div className="flex flex-col h-[100svh] md:h-screen w-full bg-[#101114] text-white">
 			<header className="sticky top-0 z-20 flex items-center justify-between border-b border-gray-800 px-3 py-3 sm:px-6 bg-[#0b0b0c]/95 backdrop-blur">
-				<div className="flex items-center gap-3">
-					{onShowSidebar && (
+				<div className="flex items-center gap-2 sm:gap-3 min-w-0">
+					{onBackToChats && (
 						<button
 							type="button"
-							onClick={onShowSidebar}
-							className="md:hidden mr-1 flex items-center gap-1 rounded-lg px-2 py-1 text-sm text-gray-300 hover:text-white hover:bg-gray-800/60 transition"
+							onClick={onBackToChats}
+							className="md:hidden mr-1 shrink-0 flex items-center gap-1 rounded-lg px-2 py-1 text-sm text-gray-300 hover:text-white hover:bg-gray-800/60 transition"
 						>
 							<span aria-hidden="true">←</span>
-							<span className="sr-only">Back to chats</span>
+							<span>All chats</span>
 						</button>
 					)}
 					<div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#6a5af9] to-[#f857a6] flex items-center justify-center text-sm font-semibold">
 						{headerName?.charAt(0) ?? "U"}
 					</div>
-					<div>
-						<div className="text-lg font-semibold">{headerName}</div>
+					<div className="min-w-0">
+						<div className="text-lg font-semibold truncate">{headerName}</div>
 						<div className="text-xs text-gray-400">{headerStatus}</div>
 					</div>
 				</div>
 			</header>
 
-			<div ref={listRef} className="flex-1 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6 space-y-3 sm:space-y-4 pb-24 sm:pb-6">
+			<div ref={listRef} className="flex-1 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6 space-y-3 sm:space-y-4 pb-24 sm:pb-6 bg-gradient-to-b from-[#111319] to-[#0e1015]">
+				{messages.length === 0 && (
+					<div className="h-full min-h-[40vh] flex items-center justify-center text-sm text-gray-500 text-center px-4">
+						No messages yet. Start the conversation.
+					</div>
+				)}
 				{messages.map((message, index) => {
 					const isMe = String(message.senderId) === String(currentUserId);
 					return (
 						<div key={makeMessageKey(message) || index} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
-							<div className={`max-w-[92%] sm:max-w-[70%] rounded-2xl px-4 py-3 text-[0.95rem] shadow-sm ${isMe ? "bg-[#F84565] text-white rounded-tr-sm" : "bg-gray-800 text-gray-100 rounded-tl-sm"}`}>
+							<div className={`max-w-[92%] sm:max-w-[70%] rounded-2xl px-4 py-3 text-[0.95rem] shadow-sm ${isMe ? "bg-[#F84565] text-white rounded-tr-sm" : "bg-[#1b2233] text-gray-100 rounded-tl-sm"}`}>
 								{message.text && <div className="whitespace-pre-wrap">{message.text}</div>}
 								{(message.attachments || []).map((att, i) => (
 									<div key={`${makeMessageKey(message)}-att-${i}`} className="mt-2">
@@ -240,9 +241,9 @@ const ChatArea = () => {
 					<textarea
 						value={draft}
 						onChange={(e) => setDraft(e.target.value)}
-						rows={2}
+						rows={1}
 						placeholder="Type a message..."
-						className="flex-1 min-h-[56px] sm:min-h-[44px] resize-none bg-transparent border border-gray-800 rounded-2xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#F84565]"
+						className="flex-1 min-h-[52px] sm:min-h-[44px] max-h-40 resize-y bg-transparent border border-gray-800 rounded-2xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#F84565]"
 						onKeyDown={(e) => {
 							if (e.key === "Enter" && !e.shiftKey) {
 								e.preventDefault();

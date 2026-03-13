@@ -34,16 +34,16 @@ const Products = () => {
   }
 
   return (
-    <div className="relative md:mt-25 max-md:mt-25 px-6 md:px-12 py-8">
+    <div className="relative md:mt-25 max-md:mt-25 px-3 md:px-12 py-8 w-full">
       <BlurCircle top="750px" left="70px" />
       <BlurCircle top="120px" right="10px" />
       <BlurCircle top="30px" left="300px" />
       <BlurCircle top="30px" left="300px" />
 
       {hasProducts && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full items-stretch">
           {products.map((product) => (
-            <div key={product._id} className="flex flex-col gap-2">
+            <div key={product._id} className="flex flex-col gap-2 w-full">
               <ProductCard
                 ProductId={product._id}
                 Price={product.price}
@@ -67,11 +67,11 @@ const Products = () => {
             Currently rented products
             <span className="text-sm text-gray-400">({rented.length})</span>
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full items-stretch">
             {rented.map((rent) => {
               const item = rent.productId ?? {};
               return (
-                <div key={rent._id} className="flex flex-col gap-2">
+                <div key={rent._id} className="flex flex-col gap-2 w-full">
                   <ProductCard
                     ProductId={item._id ?? rent.productId}
                     Price={item.price}

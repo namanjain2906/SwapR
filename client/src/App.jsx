@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import { Toaster } from "react-hot-toast";
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Products from "./pages/Products.jsx";
 import ProductDetails from "./pages/ProductDetails.jsx";
@@ -19,17 +19,18 @@ import Address from "./pages/Address.jsx";
 import Category from "./pages/Category.jsx";
 import OrderRequest from "./pages/admin/OrderRequest.jsx";
 import Search from "./pages/Search.jsx";
-import Chat from "./pages/Chat.jsx";
 import ChatArea from "./pages/ChatArea.jsx";
-import { ChartArea } from "lucide-react";
 
 const App = () => {
-  const isAdminRoute = useLocation().pathname.startsWith("/admin");
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+  const isChatRoute = location.pathname.startsWith("/chat");
+  const showGlobalShell = !isAdminRoute && !isChatRoute;
   const { user } = useAppContext();
   return (
     <div className="relative overflow-hidden">
       <Toaster></Toaster>
-      {!isAdminRoute && <Navbar />}
+      {showGlobalShell && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/products" element={<Products />}></Route>
@@ -74,7 +75,7 @@ const App = () => {
           <Route path="list-products" element={<ListProducts />} />
         </Route>
       </Routes>
-      {!isAdminRoute && <Footer />}
+      {showGlobalShell && <Footer />}
     </div>
   );
 };
